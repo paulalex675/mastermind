@@ -20,8 +20,20 @@ class Player
             puts "You have #{@num_guesses} guesses left"
             @guess.clear
             @guess << gets.chomp.split("") 
+            @guess.flatten!
             @num_guesses -= 1
             feedback()
+            if @guess == $code || @f_back == $code
+                puts "Congratulations you cracked my code!"
+                puts "You clever clogs"
+                exit
+            else puts "That's not quite right"
+                if @num_guesses > 0
+                    puts "Guess again"
+                    turn()
+                else puts "You failed to crack my code, tough luck!"
+                end
+            end
         end
     end
 
@@ -29,15 +41,13 @@ class Player
         a = 0
         @f_back.clear
         while a < $code.length
-            if $code[a] === @guess[a]
+            if $code[a] == @guess[a]
                 @f_back << $code[a]
             else @f_back << "*"
             end
             a += 1
         end
-        puts $code 
-        puts @guess
-        print @f_back
+        print  @f_back
     end
 
 end
@@ -54,7 +64,6 @@ class Code
       $code = Array.new
       x = gets.chomp.to_i
       x.times { $code << @colors.sample }
-      puts $code
       puts "Your code contains a combination of the colors red, green and blue"
     end
 end
