@@ -20,59 +20,130 @@ class Player
       feedback()
       if @guess == $code || @f_back == $code
         print $code
-        puts "Congratulations you cracked my code!"
-        puts "You clever clogs"
+        puts 'Congratulations you cracked my code!'
+        puts 'You clever clogs'
         exit
       else puts "That's not quite right"
         if @num_guesses > 0
-            puts "Guess again"
+            puts 'Guess again'
             turn()
-        else puts "You failed to crack my code, tough luck!"
+        else puts 'You failed to crack my code, tough luck!'
             print $code
         end
       end
     end
   end
 
-  def code_breaker
+#  def code_breaker
+#    @my_f_back = Array.new
+#    while @num_guesses > 0
+#      puts 'So here is my guess'
+#      @guess.clear
+#      4.times { @guess << $colors.sample } 
+#      @guess.flatten!
+#      @num_guesses -= 1
+#      puts @guess
+#      puts 'How did I do?'
+#      @my_f_back << gets.chomp.split("")
+#      if @guess == $code || @my_f_back.join("") == "IIII"
+#      print $code
+#      puts "Yay! I did it!"
+#      puts "They Don't call me Mastermind for nothing you know!"
+#      exit
+#      elsif @num_guesses > 0
+#        puts "Hmm let me have another go"
+#        code_breaker()
+#        else puts "Congratulations, your code was too tough for me to beat"
+#          print $code.flatten
+#        end
+#      end
+#    end
+#  end
+
+  def master_code_breaker
     @my_f_back = Array.new
-    while @num_guesses > 0
-      puts "So here is my guess"
-      @guess.clear
-      4.times { @guess << $colors.sample } 
-      @guess.flatten!
-      @num_guesses -= 1
-      puts @guess
-      puts "How did I do?"
-      @my_f_back << gets.chomp.split("")
-      if @guess == $code || @my_f_back.join("") == "IIII"
-      print $code
-      puts "Yay! I did it!"
-      puts "They Don't call me Mastermind for nothing you know!"
-      exit
-      else puts "Hmm let me have another go"
-        if @num_guesses > 0
-          puts "Guess again"
-          code_breaker()
-        else puts "Congratulations, your code was too tough for me to beat"
+    while @guess != $code || @num_guesses > 0  
+      if @num_guesses == 12 
+        puts "Ok, here's my first guess"
+        2.times { @guess << 'r' }
+        2.times { @guess << 'g' }
+        puts @guess
+        @num_guesses -= 1
+        puts 'How did I do?'
+        @my_f_back << gets.chomp.upcase.split('')
+        @my_f_back.flatten!
+        if @guess == $code || @my_f_back.join('') == 'IIII'
           print $code
+          puts 'Yay! I did it!'
+          puts "They Don't call me Mastermind for nothing you know!"
+          exit
+        end
+      elsif @num_guesses < 12 && @num_guesses > 0
+        puts "OK, here's my next guess"
+        @my_f_back.flatten!
+        @my_f_back.each_index do |a| if @my_f_back[a] == 'X'
+                                       1.times { @guess << @guess.sample }
+                                     elsif @my_f_back[a] == 'I'
+                                       @guess << @guess[a]
+                                     elsif @my_f_back[a] == '0'
+                                       1.times { @guess << $colors.sample }
+                                     else puts 'feedback error'
+                                     end
+                              end
+        @my_f_back.clear
+        @guess.flatten!
+        4.times { @guess.delete_at(0) }
+        puts @guess
+        @num_guesses -= 1
+        puts 'How did I do?'
+        @my_f_back << gets.chomp.upcase.split('')
+        if @guess == $code || @my_f_back.join('') == 'IIII'
+          print $code
+          puts 'Yay! I did it!'
+          puts "They Don't call me Mastermind for nothing you know!"
+          exit
+      elsif @num_guesses == 1
+        puts 'Ok, final guess. Is this your code?'
+        @my_f_back.each_index do |a| if @my_f_back[a] == 'X'
+                                       1.times { @guess << @guess.sample }
+                                     elsif @my_f_back[a] == 'I'
+                                       @guess << @guess[a]
+                                     elsif @my_f_back[a] == '0'
+                                       1.times { @guess << $colors.sample }
+                                     else puts 'feedback error'
+                                     end
+                              end
+        @my_f_back.clear
+        @guess.flatten!
+        4.times { @guess.delete_at(0) }
+        puts @guess
+        @num_guesses -= 1
+        puts 'How did I do?'
+        @my_f_back << gets.chomp.upcase.split("")
+        if @guess == $code || @my_f_back.join("") == "IIII"
+          print $code
+          puts 'Yay! I did it!'
+          puts "They Don't call me Mastermind for nothing you know!"
+          exit
+        else puts 'Congratulations, your code was too difficult for me to crack!'
+          exit
+        end
         end
       end
     end
   end
 
-  def feedback
+  def feedback()
     @f_back.clear
     @guess.each_index do |a| if @guess[a] === $code[a]
-                              @f_back << "I"
-                          elsif @guess.each { |b| $code.include? b }
-                              @f_back << "X"
-                          else @f_back << "0"
-                          end
-                  end
-  print @f_back.shuffle
+                              @f_back << 'I'
+                             elsif @guess.each { |b| $code.include? b }
+                                  @f_back << 'X'
+                             else @f_back << '0'
+                             end
+                      end
+    print @f_back.shuffle
   end
-
 end
 
 class Code
@@ -93,7 +164,7 @@ class Code
     puts "create your code with a combination of 'r', 'g', 'b', 'y', 'o', 'p' and I'll guess it"
     puts "I won't peek, honest"
     $code << gets.chomp.split("")
-
+    $code.flatten!
   end
 end
 
@@ -110,7 +181,7 @@ if @answer == 'guess'
   player1.turn 
 elsif @answer == 'create'
   code.create_code
-  mastermind.code_breaker
+  mastermind.master_code_breaker
 else puts "Please type 'guess' or 'create'"
   @answer = gets.chomp
 end
