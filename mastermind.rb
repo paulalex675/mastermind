@@ -34,32 +34,6 @@ class Player
     end
   end
 
-#  def code_breaker
-#    @my_f_back = Array.new
-#    while @num_guesses > 0
-#      puts 'So here is my guess'
-#      @guess.clear
-#      4.times { @guess << $colors.sample } 
-#      @guess.flatten!
-#      @num_guesses -= 1
-#      puts @guess
-#      puts 'How did I do?'
-#      @my_f_back << gets.chomp.split("")
-#      if @guess == $code || @my_f_back.join("") == "IIII"
-#      print $code
-#      puts "Yay! I did it!"
-#      puts "They Don't call me Mastermind for nothing you know!"
-#      exit
-#      elsif @num_guesses > 0
-#        puts "Hmm let me have another go"
-#        code_breaker()
-#        else puts "Congratulations, your code was too tough for me to beat"
-#          print $code.flatten
-#        end
-#      end
-#    end
-#  end
-
   def master_code_breaker
     @my_f_back = Array.new
     while @guess != $code || @num_guesses > 0  
@@ -70,6 +44,8 @@ class Player
         puts @guess
         @num_guesses -= 1
         puts 'How did I do?'
+        puts 'Feedback is given with i for a correct color and position, x for a correct color 
+        and incorrect position and 0 for incorrect color and position. Feedback should be 4 characters long'
         @my_f_back << gets.chomp.upcase.split('')
         @my_f_back.flatten!
         if @guess == $code || @my_f_back.join('') == 'IIII'
@@ -104,6 +80,7 @@ class Player
           exit
       elsif @num_guesses == 1
         puts 'Ok, final guess. Is this your code?'
+        @my_f_back.flatten!
         @my_f_back.each_index do |a| if @my_f_back[a] == 'X'
                                        1.times { @guess << @guess.sample }
                                      elsif @my_f_back[a] == 'I'
